@@ -79,13 +79,14 @@ jobs:
             # https://github.com/matplotlib/matplotlib/issues/29732
             pygobject-ver: '<3.52.0'
 
-    steps:
+      steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v5.0.0
         with:
           fetch-depth: 0
           persist-credentials: false
-          
-        name: Fetch upstream tags
+
+      # ✅ new step (separate from checkout)
+      - name: Fetch upstream tags
         run: git fetch --tags https://github.com/matplotlib/matplotlib.git
 
       - name: Set up Python ${{ matrix.python-version }}
