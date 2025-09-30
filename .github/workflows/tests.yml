@@ -223,24 +223,23 @@ jobs:
       # ... (before 'Install Python dependencies' step)
       - name: Install Python dependencies
         run: |
-          # Upgrade pip and setuptools and wheel to get as clean an install as
-          # possible.
+          # Upgrade pip and setuptools and wheel...
           python -m pip install --upgrade pip setuptools wheel
 
-          # Install pre-release versions during our weekly upcoming dependency tests.
+          # Set PRE flag for scheduled jobs, default to empty string
+          PRE=""
           if [[ "${{ github.event_name }}" == 'schedule'
                 && "${{ matrix.name-suffix }}" != '(Minimum Versions)' ]]; then
             PRE="--pre"
           fi
 
-          # Install dependencies from PyPI.
-          # Preinstall build requirements to enable no-build-isolation builds.
+          # Install dependencies from PyPI. ADDED pytest-testmon and using $PRE
           python -m pip install --upgrade $PRE \
             'contourpy>=1.0.1' cycler fonttools kiwisolver importlib_resources \
             packaging pillow 'pyparsing!=3.1.0' python-dateutil setuptools-scm \
             'meson-python>=0.13.1' 'pybind11>=2.13.2' \
+            pytest-testmon \
             -r requirements/testing/all.txt \
-              pytest-testmon
             ${{ matrix.extra-requirements }}
 
           # Install optional dependencies from PyPI.
