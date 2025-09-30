@@ -344,7 +344,9 @@ jobs:
           if [[ "${{ github.event_name }}" == 'push' || "${{ github.event_name }}" == 'pull_request' ]]; then
             # Use --testmon-nocommit to run affected tests but avoid updating the cache key, 
             # ensuring the full test suite runs on merge.
-            TESTMON_FLAG="--testmon" 
+            # NOTE: The traceback shows Testmon is incompatible with pytest-cov's branch coverage.
+            # Adding --no-cov-branch to resolve the conflict.
+            TESTMON_FLAG="--testmon --no-cov-branch" 
           fi
 
           pytest -rfEsXR -n auto ${TESTMON_FLAG} \
