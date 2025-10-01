@@ -395,7 +395,8 @@ jobs:
             fi
 
             # Check if any .gcda files exist before attempting lcov --capture
-            if compgen -G "**/*.gcda" > /dev/null; then
+            if find . -name '*.gcda' -print -quit | grep -q .; then
+
               lcov --rc lcov_branch_coverage=1 --ignore-errors $LCOV_IGNORE_ERRORS \
                 --capture --directory . --output-file coverage.info
 
