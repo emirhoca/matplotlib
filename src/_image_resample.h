@@ -22,7 +22,7 @@
 
 #include "agg_workaround.h"
 
-// Based on:
+// Based on demo:
 
 //----------------------------------------------------------------------------
 // Anti-Grain Geometry - Version 2.4
