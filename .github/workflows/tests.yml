@@ -340,18 +340,19 @@ jobs:
           fi
 
           # Use Testmon only on feature branch pushes or PRs to run affected tests only
+          # Use Testmon only on feature branch pushes or PRs
           TESTMON_FLAG=""
+          COV_CFG=""
           if [[ "${{ github.event_name }}" == 'push' || "${{ github.event_name }}" == 'pull_request' ]]; then
-            # Use --testmon-nocommit to run affected tests but avoid updating the cache key, 
-            # ensuring the full test suite runs on merge.
-            # NOTE: The traceback shows Testmon is incompatible with pytest-cov's branch coverage.
-            # Adding --no-cov-branch to resolve the conflict.
-            TESTMON_FLAG="--testmon" 
+            TESTMON_FLAG="--testmon"
+            # Disable branch coverage only when Testmon is active (avoids conflict with pytest-cov)
+            printf "[run]\nbranch = False\n" > .coveragerc.testmon
+            COV_CFG="--cov-config=.coveragerc.testmon"
           fi
 
           pytest -rfEsXR -n auto ${TESTMON_FLAG} \
             --maxfail=50 --timeout=300 --durations=25 \
-            --cov-report=xml --cov=lib --log-level=DEBUG --color=yes
+            --cov-report=xml --cov=lib ${COV_CFG} --log-level=DEBUG --color=yes
 
       - name: Cleanup non-failed image files
         if: failure()
